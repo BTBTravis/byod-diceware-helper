@@ -90,20 +90,6 @@ view model =
     ]
 
 
---viewValidation : Model -> Html msg
---viewValidation model =
-  --let
-    --(color, message) =
-      --if model.password == model.password then
-        --("green", "OK")
-      --else
-        --("red", "Passwords do not match!")
-  --in
-      --div [] 
-          --[div [ style [("color", color)] ] [ text message ]
-          --, div [] (List.map (\n -> viewDiceItem n model.name) model.dlist)
-          --]
-
 viewDiceItem : DiceItem -> String -> Html msg
 viewDiceItem item searchTerm = 
     let 
@@ -132,7 +118,21 @@ viewDiceItem item searchTerm =
                     <| (toString i)
                 }
             )
-            --|> Debug.log "nums"
+            |> List.foldl (\item carry-> { part = item.part, searchPart = 
+                --(List.reverse carry
+                (List.head carry
+                --|> List.head  
+                |> (\a -> case a of
+                        Nothing -> item.searchPart 
+                        Just prev -> (if prev.searchPart then item.searchPart else False)
+                    )
+                )
+            } :: carry) [] 
+            --|> (\ a -> let whole = a in
+                --List.map(\b -> { b | part = "s"}) 
+               --)
+            |> List.reverse
+            |> Debug.log "nums"
     in
         div [class "dice_item"] 
             [ p [class "nums"] (List.map (\a -> Html.span [ classList [ ("highlight", a.searchPart) ]] [text a.part]) nums)

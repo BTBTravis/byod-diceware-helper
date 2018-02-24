@@ -20,7 +20,8 @@ body {
 }
 .dice_master {
     max-width: 75vw;
-    max-height: 100%;
+    /*max-height: 100%;*/
     overflow-y: scroll;
     padding-left: 15px;
+    max-height: 50vh;
 }
