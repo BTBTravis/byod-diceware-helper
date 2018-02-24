@@ -7,52 +7,32 @@ import Html.Events exposing (onInput)
 import Dice exposing (..)
 
 main =
-  Html.beginnerProgram
-    { model = model
+  Html.programWithFlags
+    { init = init
     , view = view
     , update = update
+    , subscriptions = subscriptions
+    }
+
+type alias DiceItem =
+  { id : Int
+  , chars : String
+  }
+
+type alias Model =
+    { name : String
+    , password : String
+    , dlist : List DiceItem
     }
 
 
+type alias Flags = 
+    { dicevals : List DiceItem } 
 
--- MODEL
---type alias DiceItem =
-  --{ id : Int
-  --, chars : String
-  --}
-
---dicelist = [
-    --DiceItem 11111 "a"
-    --, DiceItem 11112 "a&p"
-    --, DiceItem 11113 "a's"
-    --, DiceItem 11114 "aa"
-    --, DiceItem 11115 "aaa"
-    --, DiceItem 11116 "aaaa"
-    --, DiceItem 11121 "aaron"
-    --, DiceItem 11122 "ab"
-    --, DiceItem 11123 "aba"
-    --, DiceItem 11124 "ababa"
-    --, DiceItem 11125 "aback"
-    --, DiceItem 11126 "abase"
-    --, DiceItem 11131 "abash"
-    --, DiceItem 11132 "abate"
-    --, DiceItem 11133 "abbas"
-    --, DiceItem 11134 "abbe"
-    --, DiceItem 11135 "abbey"
-    --]
-
-type alias Model =
-  { name : String
-  , password : String
-  , dlist : List DiceItem
-  }
-
-
-model : Model
-model =
-  Model "" "" dicelist 
-
-
+-- INIT
+init : Flags -> (Model, Cmd Msg)
+init flags =
+  (Model "" "" flags.dicevals, Cmd.none)
 
 -- UPDATE
 
@@ -61,20 +41,26 @@ type Msg
     = SearchNum String
     | Password String
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
     SearchNum numstr ->
-      { model | name = numstr }
+      ({ model | name = numstr }, Cmd.none)
 
     Password password ->
-      { model | password = password }
+      ({ model | password = password }, Cmd.none)
+
+
+-- SUBSCRIPTIONS
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+  Sub.none
+
 
 
 -- VIEW
-
---ss="level">
-            --<div class="level-item has-text-centered">
  
 view : Model -> Html Msg
 view model =
