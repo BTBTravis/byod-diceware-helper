@@ -1,0 +1,16 @@
+{
+  "name": "diceware",
+  "version": "1.0.0",
+  "description": "",
+  "main": "elm.js",
+  "dependencies": {},
+  "devDependencies": {
+    "chokidar-cli": "^1.2.0"
+  },
+  "scripts": {
+    "watch": "chokidar '**/*.elm' -c 'elm-make ./src/Main.elm --output ./public/main.js' --initial",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT"
+}

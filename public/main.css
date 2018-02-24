@@ -1,0 +1,9 @@
+.highlight {
+    background-color: blue;
+}
+.steps {
+    padding-left: 2rem;
+}
+.steps li{
+    margin-bottom: .2rem !important;
+}
