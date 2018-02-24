@@ -61,16 +61,32 @@ subscriptions model =
 
 
 -- VIEW
- 
+split : Int -> List a -> List (List a)
+split i list =
+  case List.take i list of
+    [] -> []
+    listHead -> listHead :: split i (List.drop i list) 
+
 view : Model -> Html Msg
 view model =
+    let
+        (diceSections) = split 4 <|split 216 model.dlist 
+        --(diceSections) = List.Extra.takeWhile (\a -> a.id == 11111) model.dlist
+    in
   div []
     [ nav [ class "level" ] [div [ class "level-item has-text-centered" ]
         [div [ class "field"] [div [class "control"]
             [ input [ class "input is-large is-info", type_ "text", placeholder "Number", onInput SearchNum ] []
         ]]]]
     --, viewValidation model
-    , div [] (List.map (\n -> viewDiceItem n model.name) model.dlist)
+    --, div [] (List.map (\n -> viewDiceItem n model.name) diceSections)
+        --(List.map (\cols -> div [ class "columns" ] (List.map (\col -> div [ class "column" ] (viewDiceItem col model.name ) ) cols)) model.dlist)
+    , div [ class "container dice_master" ] (List.map 
+        (\cols -> div [ class "columns" ] 
+            (List.map (\col -> div [ class "column" ] 
+                (List.map (\a -> viewDiceItem a model.name) col)
+            ) cols)
+        ) diceSections)
     ]
 
 
@@ -119,7 +135,7 @@ viewDiceItem item searchTerm =
             --|> Debug.log "nums"
     in
         div [class "dice_item"] 
-            [ p [] (List.map (\a -> span [ classList [ ("highlight", a.searchPart) ]] [text a.part]) nums)
+            [ p [class "nums"] (List.map (\a -> Html.span [ classList [ ("highlight", a.searchPart) ]] [text a.part]) nums)
             , p [] [text item.chars]
             ]
 
