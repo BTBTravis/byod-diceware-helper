@@ -37,10 +37,17 @@
   </footer>
       <script src="main.js"></script>
       <script src="dicedata.js"></script>
+      <script src="scroll.js"></script>
       <script>
           var node = document.getElementById('main');
-          var app = Elm.Main.embed(node, {
+          var app = Elm.DiceHelper.embed(node, {
             dicevals: dice_data
+          });
+          app.ports.scroll.subscribe(function(id) {
+            // var suggestions = spellCheck(word);
+            // app.ports.suggestions.send(suggestions);
+              scrollMiddle(id);
+              console.log("ID: " + id);
           });
       </script> 
   </body>
