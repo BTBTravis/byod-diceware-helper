@@ -1,18 +1,16 @@
 # BYOD Diceware Helper
 
-Fun little Elm practice app to help with creating passwords using the diceware method.
+Bring your own dice! A small web app written in elm to help with creating passwords using the diceware method.
 
-More info on the diceware method at [here.](http://world.std.com/~reinhold/diceware.html) Full credit to Arnold G. Reinhold for the concept and word list.
+Live at: http://www.byod-diceware-helper.site/
 
-### Get started 
-> npm install
+![Gif of byod](https://s3.amazonaws.com/btbtravis-gifs/byod.gif)
 
-### Hack away locally
-> npm run watch
-
-### Then deploy but running
-> npm run build
-
-> num run deploy
+Info on diceware from the creator [here.](http://world.std.com/~reinhold/diceware.html) Full credit to Arnold G. Reinhold for the diceware concept and word list.
 
 
+## Quickstart
++ get setup with `npm install`
++ auto recompile with `npm run watch`
++ hack away
++ build with `npm run build`
