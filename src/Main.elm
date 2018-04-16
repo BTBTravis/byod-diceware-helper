@@ -7,7 +7,6 @@ import Regex exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput)
-import Dice exposing (..)
 
 
 main =
@@ -26,8 +25,7 @@ type alias DiceItem =
 
 
 type alias Model =
-    { name : String
-    , password : String
+    { query : String
     , dlist : List DiceItem
     }
 
@@ -42,7 +40,7 @@ type alias Flags =
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( Model "" "" flags.dicevals, Cmd.none )
+    ( Model "" flags.dicevals, Cmd.none )
 
 
 
@@ -50,21 +48,19 @@ init flags =
 
 
 type Msg
-    = SearchNum String
-    | Scroll String
+    = HandleInput String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        SearchNum numstr ->
-            ( { model | name = numstr }, scroll "update scroll" )
-
-        Scroll id ->
-            ( model, scroll id )
+        HandleInput str ->
+            ( { model | query = str }, Cmd.none )
 
 
 
+--Scroll id ->
+--( model, scroll id )
 -- SUBSCRIPTIONS
 
 
@@ -99,34 +95,29 @@ view model =
         --(diceSections) = List.Extra.takeWhile (\a -> a.id == 11111) model.dlist
     in
         div []
-            [ nav [ class "level" ]
-                [ div [ class "level-item has-text-centered" ]
-                    [ div [ class "field" ]
-                        [ div [ class "control" ]
-                            [ input [ id "search_input", class "input is-large is-info", type_ "text", placeholder "Number", onInput SearchNum ] []
-                            ]
-                        ]
+            --app info bar
+            [ div [ class "info" ]
+                [ h1 [ class "title" ] [ text "BYOD Diceware Helper" ]
+                , ul [ class "steps" ]
+                    [ li [ class "subtitle" ] [ text "Step 1. Roll dice" ]
+                    , li [ class "subtitle" ] [ text "Step 2. Look up number via search" ]
+                    , li [ class "subtitle" ] [ text "Step 3. Repeat" ]
+                    , li []
+                        [ a [ href "" ] [ text "* for more information on the diceware method and credit" ] ]
                     ]
                 ]
-
-            --, viewValidation model
-            --, div [] (List.map (\n -> viewDiceItem n model.name) diceSections)
-            --(List.map (\cols -> div [ class "columns" ] (List.map (\col -> div [ class "column" ] (viewDiceItem col model.name ) ) cols)) model.dlist)
-            , div [ class "container dice_master" ]
-                (List.map
-                    (\cols ->
-                        div [ class "columns" ]
-                            (List.map
-                                (\col ->
-                                    div [ class "column" ]
-                                        (List.map (\a -> viewDiceItem a model.name) col)
-                                )
-                                cols
-                            )
-                    )
-                    diceSections
-                )
+            , div [ class "searchandresults" ]
+                [ div [ class "search" ]
+                    [ input [ id "search_input", class "input is-large is-info", type_ "text", placeholder "dice roll results", onInput HandleInput ] [] ]
+                , div [ class "results" ]
+                    [ h1 [ class "title" ] [ text model.query ] ]
+                ]
+            , div [ class "dicelist" ] []
             ]
+
+
+
+--(List.map (\a -> viewDiceItem a model.name) col)
 
 
 viewDiceItem : DiceItem -> String -> Html msg
