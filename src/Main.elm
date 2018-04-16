@@ -150,7 +150,7 @@ view model =
                 , li [ class "subtitle" ] [ text "Step 2. Enter number into input" ]
                 , li [ class "subtitle" ] [ text "Step 3. Repeat" ]
                 , li []
-                    [ a [ href "" ] [ text "* for more information on the diceware method and credit" ] ]
+                    [ a [ href "http://world.std.com/~reinhold/diceware.html" ] [ text "* for more information on the diceware method and credit" ] ]
                 ]
             ]
         , div [ class "searchandresults" ]

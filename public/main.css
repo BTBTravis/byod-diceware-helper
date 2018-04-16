@@ -86,3 +86,15 @@ section.section {
 .github-corner {
   z-index: 200;
 }
+@media screen and (max-width: 884px) {
+  .dice_item {
+    display: none;
+  }
+  .searchandresults {
+    grid-column:  1 / span 3;
+  }
+  .info {
+    grid-column:  1 / span 3;
+    grid-row:  1 / span 1;
+  }
+}
