@@ -83,3 +83,6 @@ section.section {
   left: 0;
   right: 0;
 }
+.github-corner {
+  z-index: 200;
+}
