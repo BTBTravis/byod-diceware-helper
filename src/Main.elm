@@ -34,6 +34,71 @@ type alias Flags =
     { dicevals : List DiceItem }
 
 
+split : Int -> List a -> List (List a)
+split i list =
+    case List.take i list of
+        [] ->
+            []
+
+        listHead ->
+            listHead :: split i (List.drop i list)
+
+
+pw : List DiceItem -> String -> String
+pw dlist query =
+    String.split "" query
+        |> split 6
+        |> List.map String.concat
+        |> List.map (getDiceItem dlist)
+        |> List.foldr (\item str -> str ++ " " ++ item.chars) ""
+
+
+getDiceItem : List DiceItem -> String -> DiceItem
+getDiceItem dlist str =
+    --  <function> : List [  Tuple // TODO: figure out how to comment this
+    (List.map
+        (\ditem ->
+            ( (List.map2 (\a b -> a == b) (String.split "" (toString ditem.id)) (String.split "" str)
+                |> List.filter (\bool -> bool)
+                |> List.length
+              )
+            , ditem
+            )
+        )
+        dlist
+    )
+        |> List.foldr
+            (\a b ->
+                -- double check the equality
+                if (Tuple.first a) > (Tuple.first b) then
+                    a
+                else
+                    b
+            )
+            ( 0, { id = 0, chars = "fuck" } )
+        |> Tuple.second
+
+
+
+--|> (\t ->
+--if (Tuple.first t) == 0 then
+--Just (Tuple.second t)
+--else
+--Nothing
+--)
+
+
+padString : Int -> String -> String
+padString i str =
+    (i - (String.length str))
+        |> (\total ->
+                if total > 0 then
+                    str ++ (String.repeat total "9")
+                else
+                    str
+           )
+
+
 
 -- INIT
 
@@ -83,16 +148,6 @@ port scroll : String -> Cmd msg
 -- VIEW
 
 
-split : Int -> List a -> List (List a)
-split i list =
-    case List.take i list of
-        [] ->
-            []
-
-        listHead ->
-            listHead :: split i (List.drop i list)
-
-
 view : Model -> Html Msg
 view model =
     div []
@@ -111,7 +166,7 @@ view model =
             [ div [ class "search" ]
                 [ input [ id "search_input", class "input is-large is-info", type_ "text", placeholder "dice roll results", onInput HandleInput ] [] ]
             , div [ class "results" ]
-                [ h1 [ class "title" ] [ text model.query ] ]
+                [ h1 [ class "title" ] [ text (pw model.dlist model.query) ] ]
             ]
         , div [ class "dicelist" ] []
         ]
