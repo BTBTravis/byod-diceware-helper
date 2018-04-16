@@ -55,7 +55,14 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         HandleInput str ->
-            ( { model | query = str }, Cmd.none )
+            ( { model | query = (onlyDiceVal str) }, Cmd.none )
+
+
+onlyDiceVal : String -> String
+onlyDiceVal str =
+    String.split "" str
+        |> List.filter (\char -> Regex.contains (regex "[1-6]") char)
+        |> String.concat
 
 
 
@@ -88,32 +95,26 @@ split i list =
 
 view : Model -> Html Msg
 view model =
-    let
-        diceSections =
-            split 4 <| split 216 model.dlist
-
-        --(diceSections) = List.Extra.takeWhile (\a -> a.id == 11111) model.dlist
-    in
-        div []
-            --app info bar
-            [ div [ class "info" ]
-                [ h1 [ class "title" ] [ text "BYOD Diceware Helper" ]
-                , ul [ class "steps" ]
-                    [ li [ class "subtitle" ] [ text "Step 1. Roll dice" ]
-                    , li [ class "subtitle" ] [ text "Step 2. Look up number via search" ]
-                    , li [ class "subtitle" ] [ text "Step 3. Repeat" ]
-                    , li []
-                        [ a [ href "" ] [ text "* for more information on the diceware method and credit" ] ]
-                    ]
+    div []
+        --app info bar
+        [ div [ class "info" ]
+            [ h1 [ class "title" ] [ text "BYOD Diceware Helper" ]
+            , ul [ class "steps" ]
+                [ li [ class "subtitle" ] [ text "Step 1. Roll dice" ]
+                , li [ class "subtitle" ] [ text "Step 2. Look up number via search" ]
+                , li [ class "subtitle" ] [ text "Step 3. Repeat" ]
+                , li []
+                    [ a [ href "" ] [ text "* for more information on the diceware method and credit" ] ]
                 ]
-            , div [ class "searchandresults" ]
-                [ div [ class "search" ]
-                    [ input [ id "search_input", class "input is-large is-info", type_ "text", placeholder "dice roll results", onInput HandleInput ] [] ]
-                , div [ class "results" ]
-                    [ h1 [ class "title" ] [ text model.query ] ]
-                ]
-            , div [ class "dicelist" ] []
             ]
+        , div [ class "searchandresults" ]
+            [ div [ class "search" ]
+                [ input [ id "search_input", class "input is-large is-info", type_ "text", placeholder "dice roll results", onInput HandleInput ] [] ]
+            , div [ class "results" ]
+                [ h1 [ class "title" ] [ text model.query ] ]
+            ]
+        , div [ class "dicelist" ] []
+        ]
 
 
 
