@@ -47,7 +47,7 @@ split i list =
 pw : List DiceItem -> String -> String
 pw dlist query =
     String.split "" query
-        |> split 6
+        |> split 5
         |> List.map String.concat
         |> List.map (getDiceItem dlist)
         |> List.foldr (\item str -> str ++ " " ++ item.chars) ""
@@ -75,17 +75,8 @@ getDiceItem dlist str =
                 else
                     b
             )
-            ( 0, { id = 0, chars = "fuck" } )
+            ( 0, { id = 0, chars = "error" } )
         |> Tuple.second
-
-
-
---|> (\t ->
---if (Tuple.first t) == 0 then
---Just (Tuple.second t)
---else
---Nothing
---)
 
 
 padString : Int -> String -> String
@@ -156,7 +147,7 @@ view model =
             [ h1 [ class "title" ] [ text "BYOD Diceware Helper" ]
             , ul [ class "steps" ]
                 [ li [ class "subtitle" ] [ text "Step 1. Roll dice" ]
-                , li [ class "subtitle" ] [ text "Step 2. Look up number via search" ]
+                , li [ class "subtitle" ] [ text "Step 2. Enter number into input" ]
                 , li [ class "subtitle" ] [ text "Step 3. Repeat" ]
                 , li []
                     [ a [ href "" ] [ text "* for more information on the diceware method and credit" ] ]
@@ -168,85 +159,19 @@ view model =
             , div [ class "results" ]
                 [ h1 [ class "title" ] [ text (pw model.dlist model.query) ] ]
             ]
-        , div [ class "dicelist" ] []
+        , div [ class "dicelist" ] [ diceList model.dlist ]
         ]
 
 
-
---(List.map (\a -> viewDiceItem a model.name) col)
-
-
-viewDiceItem : DiceItem -> String -> Html msg
-viewDiceItem item searchTerm =
-    let
-        --  <function> : Int -> String
-        nums =
-            toString item.id
-                -- <function> : String -> List String
-                |> String.split ""
-                -- <function> : List String -> List { i : number, part : String, searchPart : Maybe.Maybe String }
-                |> List.indexedMap
-                    (\i part ->
-                        { i = i
-                        , part = part
-                        , searchPart =
-                            --Debug.log "match"
-                            (\a ->
-                                case a of
-                                    Nothing ->
-                                        False
-
-                                    Just head ->
-                                        case head of
-                                            Nothing ->
-                                                False
-
-                                            Just num ->
-                                                num == part
-                            )
-                            <|
-                                List.head <|
-                                    (\a -> List.concatMap (\match -> match.submatches) a)
-                                    --<| Debug.log "regex"
-                                    <|
-                                        (\a -> Regex.find All a searchTerm) <|
-                                            Regex.regex <|
-                                                (\a -> String.concat [ "^\\d{", a, "}(\\d)" ]) <|
-                                                    (toString i)
-                        }
-                    )
-                |> List.foldl
-                    (\item carry ->
-                        { part = item.part
-                        , searchPart =
-                            --(List.reverse carry
-                            (List.head carry
-                                --|> List.head
-                                |> (\a ->
-                                        case a of
-                                            Nothing ->
-                                                item.searchPart
-
-                                            Just prev ->
-                                                (if prev.searchPart then
-                                                    item.searchPart
-                                                 else
-                                                    False
-                                                )
-                                   )
-                            )
-                        }
-                            :: carry
-                    )
-                    []
-                --|> (\ a -> let whole = a in
-                --List.map(\b -> { b | part = "s"})
-                --)
-                |> List.reverse
-
-        --|> Debug.log "nums"
-    in
-        div [ class "dice_item", id (toString item.id) ]
-            [ p [ class "nums" ] (List.map (\a -> Html.span [ classList [ ( "highlight", a.searchPart ) ] ] [ text a.part ]) nums)
-            , p [] [ text item.chars ]
-            ]
+diceList : List DiceItem -> Html msg
+diceList dlist =
+    (List.map
+        (\item ->
+            div [ class "dice_item" ]
+                [ p [ class "nums" ] [ text (toString item.id) ]
+                , p [] [ text item.chars ]
+                ]
+        )
+        dlist
+    )
+        |> ul []
